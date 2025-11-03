@@ -1,16 +1,52 @@
-# React + Vite
+# Frontend – Graficadora (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interfaz para ingresar polinomios (grado ≤ 5), enviarlos al backend, graficar los puntos y consultar historial y detalle. Incluye login con Google vía Supabase (o modo demo sin credenciales).
 
-Currently, two official plugins are available:
+## Requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node 18+
+- Backend corriendo en `http://localhost:3000` (ver carpeta `backend/`)
 
-## React Compiler
+## Variables de entorno
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Copie `.env.example` a `.env` y ajuste si es necesario:
 
-## Expanding the ESLint configuration
+```
+VITE_BACKEND_URL=http://localhost:3000
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Si no define las variables de Supabase, la app mostrará un botón de “Iniciar sesión (demo)” que crea un usuario ficticio para pruebas locales.
+
+## Ejecutar en desarrollo
+
+```powershell
+cd frontend
+npm install
+npm run dev
+# Abra http://localhost:5173
+```
+
+## Pruebas
+
+```powershell
+npm test          # watch
+npm run test:run  # una sola vez
+```
+
+## Estructura principal
+
+- `src/context/AuthContext.jsx`: Autenticación (Supabase o demo)
+- `src/lib/api.js`: Cliente HTTP hacia el backend (`/api/polynomials`, historial y detalle)
+- `src/components/PolynomialForm.jsx`: Formulario de coeficientes y rango
+- `src/components/GraphPlot.jsx`: Gráfica (Plotly)
+- `src/components/HistoryList.jsx`: Historial de polinomios del usuario
+- `src/pages/Dashboard.jsx`: Flujo principal (crear y ver resultado + historial)
+- `src/pages/Detail.jsx`: Detalle de un polinomio
+
+## Notas
+
+- La variable `VITE_BACKEND_URL` debe apuntar al backend NestJS. Por defecto `http://localhost:3000`.
+- El formulario valida mínimo un coeficiente distinto de 0, y que `xMax > xMin` cuando ambos están definidos.
+- Las pruebas mockean Plotly para evitar dependencias de canvas en JSDOM.

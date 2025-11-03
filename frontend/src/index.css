@@ -1,4 +1,75 @@
 :root {
+  --bg: #0b1220;
+  --panel: #121a2b;
+  --text: #e5e7eb;
+  --muted: #93a0b4;
+  --brand: #2563eb;
+  --error: #ef4444;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body { margin: 0; font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); }
+a { color: inherit; text-decoration: none; }
+
+/* Floating math background */
+.float-bg { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+.float-symbol { position: absolute; color: #94a3b8; opacity: 0.1; animation: drift linear infinite; -webkit-user-select: none; user-select: none; }
+.float-symbol.s1 { animation-duration: 18s; }
+.float-symbol.s2 { animation-duration: 24s; }
+.float-symbol.s3 { animation-duration: 30s; }
+.float-symbol.s4 { animation-duration: 36s; }
+.float-symbol.s5 { animation-duration: 40s; }
+@keyframes drift {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg) }
+  50% { transform: translate3d(-20px, 20px, 0) rotate(8deg) }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg) }
+}
+
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid #1f2a44; position: sticky; top: 0; background: rgba(11,18,32,0.8); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.brand { font-weight: 700; color: var(--text); }
+.nav { display: flex; gap: 12px; align-items: center; }
+.user { color: var(--muted); font-size: 0.9rem; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+.grid-2 { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 16px; }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.panel { background: var(--panel); border: 1px solid #1f2a44; border-radius: 12px; padding: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+.panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+h2 { margin: 8px 0 12px; font-size: 1.1rem; }
+.expr-lg { font-size: 1.2rem; margin-bottom: 8px; }
+.meta { color: var(--muted); font-size: 0.85rem; margin-top: 8px; }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field > span { color: var(--muted); font-size: 0.85rem; }
+input { background: #0f1627; border: 1px solid #1f2a44; color: var(--text); border-radius: 8px; padding: 10px 12px; }
+input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }
+
+.btn { background: #18223a; color: var(--text); border: 1px solid #273558; padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: transform 0.1s ease; }
+.btn:hover { transform: translateY(-1px); }
+.btn.primary { background: var(--brand); border-color: var(--brand); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.actions { margin-top: 12px; display: flex; gap: 10px; }
+
+.list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.item { display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #0f1627; border: 1px solid #1f2a44; border-radius: 10px; }
+.expr { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45ch; }
+
+.error { color: var(--error); font-size: 0.9rem; }
+
+/* Login styles */
+.login-wrap { min-height: calc(100vh - 64px); display: flex; align-items: center; justify-content: center; }
+.login-card { max-width: 440px; width: 100%; text-align: center; padding: 28px; }
+.login-title { margin: 8px 0 6px; }
+.login-sub { color: var(--muted); margin: 0 0 16px; }
+.google-btn { display: inline-flex; align-items: center; gap: 10px; background: #ffffff; color: #111827; border: none; padding: 10px 14px; border-radius: 10px; font-weight: 600; }
+.google-btn:hover { transform: translateY(-1px); }
+.hint { margin-top: 10px; color: var(--muted); font-size: 0.85rem; }
+:root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
