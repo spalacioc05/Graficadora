@@ -25,4 +25,13 @@ export class GraphsRepository {
     );
     return rows[0] || null;
   }
+
+  async deleteByEquationIds(ids) {
+    if (!ids || ids.length === 0) return 0;
+    const { rowCount } = await this.pool.query(
+      `DELETE FROM public.tbl_graficas WHERE id_ecuacion = ANY($1::int[])`,
+      [ids.map((n) => Number(n))],
+    );
+    return rowCount;
+  }
 }

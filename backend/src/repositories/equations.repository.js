@@ -42,4 +42,29 @@ export class EquationsRepository {
     );
     return rows;
   }
+
+  async findIdsByAuthUid(authUid) {
+    const { rows } = await this.pool.query(
+      `SELECT e.id_ecuacion
+       FROM public.tbl_usuarios u
+       JOIN public.tbl_ecuaciones e ON e.id_usuario = u.id_usuario
+       WHERE u.auth_uid = $1
+       ORDER BY e.fecha_creacion DESC`,
+      [authUid],
+    );
+    return rows.map((r) => r.id_ecuacion);
+  }
+
+  async deleteByIdsForAuthUid(ids, authUid) {
+    if (!ids || ids.length === 0) return [];
+    // Delete equations belonging to the authUid, return actually deleted ids
+    const { rows } = await this.pool.query(
+      `DELETE FROM public.tbl_ecuaciones e
+       USING public.tbl_usuarios u
+       WHERE e.id_ecuacion = ANY($1::int[]) AND e.id_usuario = u.id_usuario AND u.auth_uid = $2
+       RETURNING e.id_ecuacion`,
+      [ids.map((n) => Number(n)), authUid],
+    );
+    return rows.map((r) => r.id_ecuacion);
+  }
 }

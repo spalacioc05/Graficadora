@@ -23,4 +23,7 @@ export const api = {
   getHistory: (authUid) => http('GET', `/api/users/${authUid}/polynomials`),
   getDetail: (id) => http('GET', `/api/polynomials/${id}`),
   getDegrees: () => http('GET', '/api/degrees'),
+  deletePolynomial: (id, authUid) => http('DELETE', `/api/polynomials/${id}?authUid=${encodeURIComponent(authUid)}`),
+  bulkDeletePolynomials: (authUid, ids) => http('POST', '/api/polynomials/bulk-delete', { authUid, ids }),
+  clearHistory: (authUid) => http('DELETE', `/api/users/${authUid}/polynomials`),
 }

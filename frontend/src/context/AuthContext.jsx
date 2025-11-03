@@ -45,8 +45,16 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  const updateDisplayName = async (fullName) => {
+    if (!supabase) throw new Error('Configura VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY')
+    const { data, error } = await supabase.auth.updateUser({ data: { full_name: fullName } })
+    if (error) throw error
+    setUser(data?.user || null)
+    return data?.user
+  }
+
   return (
-    <AuthCtx.Provider value={{ user, supabase, loading, signInWithGoogle, signOut, needsConfig }}>
+    <AuthCtx.Provider value={{ user, supabase, loading, signInWithGoogle, signOut, updateDisplayName, needsConfig }}>
       {children}
     </AuthCtx.Provider>
   )

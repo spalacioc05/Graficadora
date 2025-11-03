@@ -45,6 +45,43 @@ async function bootstrap() {
     }
   });
   
+  // Eliminar una ecuación (requiere authUid como query ?authUid=...)
+  expressApp.delete('/api/polynomials/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { authUid } = req.query;
+      const result = await polyService.eliminarEcuacion(authUid, Number(id));
+      res.json(result);
+    } catch (e) {
+      const status = e?.status || 400;
+      res.status(status).json(e?.response || { message: e.message || 'Error' });
+    }
+  });
+
+  // Eliminar varias ecuaciones: body { authUid, ids: number[] }
+  expressApp.post('/api/polynomials/bulk-delete', async (req, res) => {
+    try {
+      const { authUid, ids } = req.body || {};
+      const result = await polyService.eliminarVarias(authUid, ids);
+      res.json(result);
+    } catch (e) {
+      const status = e?.status || 400;
+      res.status(status).json(e?.response || { message: e.message || 'Error' });
+    }
+  });
+
+  // Vaciar historial de un usuario
+  expressApp.delete('/api/users/:authUid/polynomials', async (req, res) => {
+    try {
+      const { authUid } = req.params;
+      const result = await polyService.limpiarHistorial(authUid);
+      res.json(result);
+    } catch (e) {
+      const status = e?.status || 400;
+      res.status(status).json(e?.response || { message: e.message || 'Error' });
+    }
+  });
+  
   // Listar grados disponibles desde la tabla tbl_grados
   expressApp.get('/api/degrees', async (_req, res) => {
     try {

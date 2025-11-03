@@ -81,4 +81,31 @@ export class PolynomialsService {
       fechaGrafica: graf?.fecha_generada || null,
     };
   }
+
+  async eliminarEcuacion(authUid, idEcuacion) {
+    if (!authUid || !idEcuacion) throw new BadRequestException('Parámetros requeridos');
+    // Delete dependent graphs, then equation (scoped to user)
+    const ids = [Number(idEcuacion)];
+    await this.graphsRepo.deleteByEquationIds(ids);
+    const deleted = await this.equationsRepo.deleteByIdsForAuthUid(ids, authUid);
+    return { deletedIds: deleted };
+  }
+
+  async eliminarVarias(authUid, ids) {
+    if (!authUid || !Array.isArray(ids)) throw new BadRequestException('Parámetros requeridos');
+    const norm = ids.map((n) => Number(n)).filter((n) => Number.isFinite(n));
+    if (norm.length === 0) return { deletedIds: [] };
+    await this.graphsRepo.deleteByEquationIds(norm);
+    const deleted = await this.equationsRepo.deleteByIdsForAuthUid(norm, authUid);
+    return { deletedIds: deleted };
+  }
+
+  async limpiarHistorial(authUid) {
+    if (!authUid) throw new BadRequestException('authUid requerido');
+    const ids = await this.equationsRepo.findIdsByAuthUid(authUid);
+    if (ids.length === 0) return { deletedIds: [] };
+    await this.graphsRepo.deleteByEquationIds(ids);
+    const deleted = await this.equationsRepo.deleteByIdsForAuthUid(ids, authUid);
+    return { deletedIds: deleted };
+  }
 }
