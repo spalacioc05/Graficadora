@@ -8,8 +8,6 @@ export function exprToLatex(expr) {
   s = s.replace(/x\s*\^\s*(-?\d+)/g, 'x^{$1}')
   // x^{1} -> x
   s = s.replace(/x\^{1}(?!\d)/g, 'x')
-  // Handle cases where exponent caret is missing (e.g., "x2" -> "x^{2}")
-  s = s.replace(/\bx(\d+)\b/g, 'x^{$1}')
   // 1x -> x (standalone 1x not part of 10x)
   s = s.replace(/\b1x\b/g, 'x')
   // -1x -> -x

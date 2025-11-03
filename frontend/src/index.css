@@ -8,12 +8,13 @@
 }
 
 * { box-sizing: border-box; }
-html, body, #root { height: 100%; }
+/* Permitir que el documento crezca más allá del viewport */
+html, body, #root { min-height: 100%; height: auto; }
 body { margin: 0; font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); }
 a { color: inherit; text-decoration: none; }
 
 /* Floating math background */
-.float-bg { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+.float-bg { position: fixed; inset: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: 0; pointer-events: none; }
 .float-symbol { position: absolute; color: #94a3b8; opacity: 0.1; animation: drift linear infinite; -webkit-user-select: none; user-select: none; }
 .float-symbol.s1 { animation-duration: 18s; }
 .float-symbol.s2 { animation-duration: 24s; }
@@ -31,7 +32,7 @@ a { color: inherit; text-decoration: none; }
 .nav { display: flex; gap: 12px; align-items: center; }
 .user { color: var(--muted); font-size: 0.9rem; }
 
-.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+.container { max-width: 1280px; margin: 0 auto; padding: 20px; }
 .grid-2 { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 16px; }
 @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
 
@@ -93,13 +94,11 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+/* Reset del template de Vite para permitir que el contenido crezca verticalmente */
+body { margin: 0; display: block; min-width: 320px; min-height: 100vh; }
+
+/* Asegurar que el contenido principal pueda expandirse y no se "corte" */
+main.container { min-height: calc(100vh - 64px); }
 
 h1 {
   font-size: 3.2em;

@@ -42,7 +42,8 @@ export default function PolynomialForm({ onSubmit, loading, useDegreesApi = true
 
   const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: { a5: 0, a4: 0, a3: 0, a2: 0, a1: 0, a0: 0, grado: 2, xMin: -10, xMax: 10, paso: 0.5 },
+    // Paso más denso para curvas suaves por defecto
+    defaultValues: { a5: 0, a4: 0, a3: 0, a2: 0, a1: 0, a0: 0, grado: 2, xMin: -10, xMax: 10, paso: 0.02 },
   })
 
   const grado = Number(watch('grado') ?? 2)
@@ -125,7 +126,7 @@ export default function PolynomialForm({ onSubmit, loading, useDegreesApi = true
         </label>
         <label className="field">
           <span>Paso</span>
-          <input type="number" step="any" {...register('paso')} />
+          <input type="number" step="any" min="0.0001" {...register('paso')} />
         </label>
       </div>
       {errors.root && <p className="error">{errors.root.message}</p>}

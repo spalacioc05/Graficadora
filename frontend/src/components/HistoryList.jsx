@@ -1,7 +1,14 @@
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import MathExpr from './MathExpr.jsx'
 
 export default function HistoryList({ items, loading, error, onRefresh }) {
+  const [visible, setVisible] = useState(10)
+  // Asegurar orden (ya viene DESC desde API); por si acaso, ordenamos aquí también
+  const ordered = useMemo(() => (items || []).slice().sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion)), [items])
+  const slice = ordered.slice(0, visible)
+  const hasMore = ordered.length > slice.length
+
   return (
     <section className="panel">
       <div className="panel-header">
@@ -10,9 +17,9 @@ export default function HistoryList({ items, loading, error, onRefresh }) {
       </div>
       {loading && <p>Cargando historial...</p>}
       {error && <p className="error">{error}</p>}
-      {!loading && !error && (!items || items.length === 0) && <p>Sin registros aún.</p>}
+      {!loading && !error && (!ordered || ordered.length === 0) && <p>Sin registros aún.</p>}
       <ul className="list">
-        {items?.map((it) => (
+        {slice.map((it) => (
           <li key={it.idEcuacion} className="item">
             <div>
               <div className="expr"><MathExpr expr={it.expresion} /></div>
@@ -22,6 +29,11 @@ export default function HistoryList({ items, loading, error, onRefresh }) {
           </li>
         ))}
       </ul>
+      {hasMore && (
+        <div className="actions" style={{ justifyContent: 'center' }}>
+          <button className="btn" onClick={() => setVisible((v) => v + 10)}>Ver más</button>
+        </div>
+      )}
     </section>
   )
 }
