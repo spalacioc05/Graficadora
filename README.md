@@ -294,16 +294,30 @@ Hecho con ❤️ usando React, NestJS, PostgreSQL y un toque de KaTeX/Plotly.
 
 ## Despliegue (Producción)
 
-### Backend en Render
+### Backend en Koyeb
 
-1. Conecta tu repositorio en Render y selecciona el directorio `backend`.
-2. Usa el archivo `render.yaml` del repositorio para configuración automática (opcional). Si lo usas:
-	- Render detectará: build `npm install --include=dev`, start `npm start`.
-3. Variables de entorno reales:
+Opción A: Docker (recomendada, sin tocar el código)
+
+1. El repo incluye `backend/Dockerfile` listo para producción (instala devDependencies necesarias para babel-node).
+2. Crea una App/Service en Koyeb usando GitHub:
+	- Repository: este repo
+	- Deployment mode: Docker
+	- Dockerfile path: `backend/Dockerfile`
+	- Context: raíz del repo
+	- Exposed port: 3000
+	- Health check: HTTP GET `/health`
+3. Variables de entorno (Secrets):
 	- `DATABASE_URL` (cadena PostgreSQL real)
-	- `PORT` (Render asigna una; si pones 3000 concuerda con local, pero Render la sobrescribe internamente)
-4. Health check: `/health`.
-5. Obtén la URL pública (ej. `https://graficadora-backend.onrender.com`).
+	- `SUPABASE_AUTH_CALLBACK_URL` (si aplica)
+4. Guarda y despliega. Koyeb construirá la imagen y expondrá la URL pública del backend.
+
+Opción B: Buildpacks Node (si no quieres Docker)
+
+1. Crea servicio Node y establece el subdirectorio `backend` como Workdir.
+2. Añade variable `NPM_CONFIG_PRODUCTION=false` para instalar devDependencies (babel-node).
+3. Start command: `npm start`.
+4. Variables: `DATABASE_URL`, `SUPABASE_AUTH_CALLBACK_URL` (opcional).
+5. Health check: `/health`.
 
 ### Frontend en Vercel
 
@@ -317,12 +331,12 @@ Se incluye `frontend/vercel.json` para construir el frontend desde su propia car
 Variables de entorno en Vercel (Production):
 
 ```
-VITE_BACKEND_URL=https://graficadora-backend.onrender.com
+VITE_BACKEND_URL=https://<tu-backend>.koyeb.app
 VITE_SUPABASE_URL=https://<tu-proyecto>.supabase.co
 VITE_SUPABASE_ANON_KEY=<clave-anon-real>
 ```
 
-Tras cada push a `main`, Vercel construirá y publicará la última versión del frontend apuntando al backend en Render.
+Tras cada push a `main`, Vercel construirá y publicará la última versión del frontend apuntando al backend en Koyeb.
 
 ### Supabase Auth (si usas OAuth)
 - En el panel de Supabase → Authentication → URL de redirección: añade tu dominio Vercel (ej. `https://tu-app.vercel.app`).
@@ -330,7 +344,7 @@ Tras cada push a `main`, Vercel construirá y publicará la última versión del
 
 ### Verificación rápida post-deploy
 
-1. Accede a la URL Vercel, abre DevTools → Network y verifica llamadas a `/api/polynomials` apuntan al dominio Render.
+1. Accede a la URL Vercel, abre DevTools → Network y verifica llamadas a `/api/polynomials` apuntan al dominio de Koyeb.
 2. Crea un polinomio y confirma que se guarda y grafica.
 3. Revisa `/health` del backend para asegurar estado OK.
 4. Prueba eliminar elementos del historial (single/multi/vaciar).
