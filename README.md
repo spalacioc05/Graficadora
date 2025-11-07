@@ -307,11 +307,11 @@ Hecho con ❤️ usando React, NestJS, PostgreSQL y un toque de KaTeX/Plotly.
 
 ### Frontend en Vercel
 
-Se incluye `vercel.json` en la raíz para construir el subproyecto `frontend`.
+Se incluye `frontend/vercel.json` para construir el frontend desde su propia carpeta (Root Directory = `frontend`).
 
-- Build Command: `npm --prefix frontend run build`
-- Output Directory: `frontend/dist`
-- Install Command: `npm --prefix frontend install`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Install Command: `npm install`
 - Rewrites: todas las rutas → `index.html` (SPA)
 
 Variables de entorno en Vercel (Production):
