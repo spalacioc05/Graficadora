@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: graficadora-backend
+    env: node
+    rootDir: backend
+    buildCommand: "npm install --include=dev"
+    startCommand: "npm start"
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: PORT
+        value: "3000"
+    healthCheckPath: /health
